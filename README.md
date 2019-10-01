@@ -1,6 +1,6 @@
-# HTTP Header
 [![Documentation](https://godoc.org/github.com/dennisstritzke/httpheader?status.svg)](https://godoc.org/github.com/dennisstritzke/httpheader)
 
+# HTTP Header
 Golang library to bind HTTP headers into struct values.
 
 ## Example
