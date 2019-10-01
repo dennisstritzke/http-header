@@ -1,11 +1,11 @@
-package HttpHeader
+package httpheader
 
 import (
 	"net/http"
 	"testing"
 )
 
-func createRequest(omit ...string) http.Request {
+func createHeader(omit ...string) http.Header {
 	headers := map[string][]string{
 		"Foo": {"Bar"},
 		"Bar": {"Foo", "42"},
@@ -15,18 +15,16 @@ func createRequest(omit ...string) http.Request {
 		delete(headers, headerToOmit)
 	}
 
-	return http.Request{
-		Header: headers,
-	}
+	return headers
 }
 
 func TestBind_nil(t *testing.T) {
-	err := Bind(http.Request{}, nil)
+	err := Bind(http.Header{}, nil)
 	checkForInvalidBindError(t, err)
 }
 
 func TestBind_nonPointerType(t *testing.T) {
-	err := Bind(http.Request{}, "")
+	err := Bind(http.Header{}, "")
 	checkForInvalidBindError(t, err)
 }
 
@@ -37,7 +35,7 @@ func TestBind_String(t *testing.T) {
 
 	var test Test
 
-	err := Bind(createRequest(), &test)
+	err := Bind(createHeader(), &test)
 	if err != nil {
 		t.Error(err)
 		return
@@ -57,7 +55,7 @@ func TestBind_StringSlice(t *testing.T) {
 
 	var test Test
 
-	err := Bind(createRequest(), &test)
+	err := Bind(createHeader(), &test)
 	if err != nil {
 		t.Error(err)
 		return

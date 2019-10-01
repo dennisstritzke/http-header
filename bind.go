@@ -1,4 +1,4 @@
-package HttpHeader
+package httpheader
 
 import (
 	"net/http"
@@ -28,16 +28,16 @@ func (e *InvalidBindError) Error() string {
 }
 
 // Bind processes the HTTP header fields and stores the result in the value pointed to by v.
-func Bind(r http.Request, v interface{}) error {
+func Bind(header http.Header, v interface{}) error {
 	rv := reflect.ValueOf(v)
 	if rv.Kind() != reflect.Ptr || rv.IsNil() {
 		return &InvalidBindError{reflect.TypeOf(v)}
 	}
 
-	return bind(v, r)
+	return bind(v, header)
 }
 
-func bind(v interface{}, r http.Request) error {
+func bind(v interface{}, header http.Header) error {
 	rv := reflect.Indirect(reflect.ValueOf(v))
 	t := reflect.TypeOf(v).Elem()
 
@@ -45,7 +45,7 @@ func bind(v interface{}, r http.Request) error {
 		field := t.Field(i)
 
 		if headerName, ok := field.Tag.Lookup(tagIdentifier); ok {
-			headerValue := r.Header[headerName]
+			headerValue := header[headerName]
 
 			if len(headerValue) > 0 {
 				value := rv.Field(i)
